@@ -21,6 +21,9 @@
       --soft-blue: #e0f2fe;
       --soft-green: #ecfdf5;
       --soft-red: #fef2f2;
+      --highlight-yellow: #fff3a3;
+      --highlight-green: #bbf7d0;
+      --highlight-pink: #fecdd3;
       --shadow: 0 12px 28px rgba(2, 132, 199, 0.12);
     }
 
@@ -360,6 +363,64 @@
       border: 1px solid var(--border);
     }
 
+    .highlight-popup {
+      position: fixed;
+      display: none;
+      align-items: center;
+      gap: 7px;
+      z-index: 9999;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 10px;
+      box-shadow: 0 10px 24px rgba(2, 132, 199, 0.20);
+    }
+
+    .highlight-popup.visible {
+      display: flex;
+    }
+
+    .highlight-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 51, 0.18);
+      cursor: pointer;
+    }
+
+    .highlight-dot.yellow { background: var(--highlight-yellow); }
+    .highlight-dot.green { background: var(--highlight-green); }
+    .highlight-dot.pink { background: var(--highlight-pink); }
+
+    .highlight-clear-small {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    mark.user-highlight-yellow {
+      background: var(--highlight-yellow);
+      padding: 1px 2px;
+      border-radius: 4px;
+    }
+
+    mark.user-highlight-green {
+      background: var(--highlight-green);
+      padding: 1px 2px;
+      border-radius: 4px;
+    }
+
+    mark.user-highlight-pink {
+      background: var(--highlight-pink);
+      padding: 1px 2px;
+      border-radius: 4px;
+    }
+
     @media (max-width: 700px) {
       header {
         position: static;
@@ -426,6 +487,13 @@
     <button class="tab-btn" onclick="showPart(2)">Part 2</button>
     <button class="tab-btn" onclick="showPart(3)">Part 3</button>
     <button class="tab-btn" onclick="showPart(4)">Part 4</button>
+  </div>
+
+  <div id="highlightPopup" class="highlight-popup">
+    <button class="highlight-dot yellow" title="Yellow" onclick="highlightSelection('yellow')"></button>
+    <button class="highlight-dot green" title="Green" onclick="highlightSelection('green')"></button>
+    <button class="highlight-dot pink" title="Pink" onclick="highlightSelection('pink')"></button>
+    <button class="highlight-clear-small" title="Clear all highlights in this part" onclick="clearHighlightsInActivePart()">Clear</button>
   </div>
 
   <main>
@@ -705,8 +773,123 @@
         btn.classList.toggle("active", idx === num - 1);
       });
 
+      hideHighlightPopup();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+
+    let savedHighlightRange = null;
+
+    function getActivePartContent() {
+      return document.querySelector(".part.active");
+    }
+
+    function getHighlightPopup() {
+      return document.getElementById("highlightPopup");
+    }
+
+    function hideHighlightPopup() {
+      const popup = getHighlightPopup();
+      if (popup) popup.classList.remove("visible");
+    }
+
+    function updateHighlightPopup() {
+      const selection = window.getSelection();
+      const popup = getHighlightPopup();
+      const activePart = getActivePartContent();
+
+      if (!selection || !popup || !activePart || selection.rangeCount === 0 || selection.toString().trim() === "") {
+        hideHighlightPopup();
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+
+      if (!activePart.contains(range.commonAncestorContainer)) {
+        hideHighlightPopup();
+        return;
+      }
+
+      savedHighlightRange = range.cloneRange();
+
+      const rect = range.getBoundingClientRect();
+      const popupWidth = 190;
+      let left = rect.left + rect.width / 2 - popupWidth / 2;
+      let top = rect.top - 52;
+
+      if (left < 10) left = 10;
+      if (left + popupWidth > window.innerWidth - 10) left = window.innerWidth - popupWidth - 10;
+      if (top < 10) top = rect.bottom + 12;
+
+      popup.style.left = left + "px";
+      popup.style.top = top + "px";
+      popup.classList.add("visible");
+    }
+
+    function highlightSelection(color) {
+      const activePart = getActivePartContent();
+      let range = savedHighlightRange;
+
+      if (!range) {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+          range = selection.getRangeAt(0);
+        }
+      }
+
+      if (!range || !activePart || !activePart.contains(range.commonAncestorContainer)) {
+        alert("Please select text inside the active listening part first.");
+        hideHighlightPopup();
+        return;
+      }
+
+      const mark = document.createElement("mark");
+      mark.className = "user-highlight-" + color;
+
+      try {
+        range.surroundContents(mark);
+      } catch (error) {
+        const selectedText = range.extractContents();
+        mark.appendChild(selectedText);
+        range.insertNode(mark);
+      }
+
+      const selection = window.getSelection();
+      if (selection) selection.removeAllRanges();
+
+      savedHighlightRange = null;
+      hideHighlightPopup();
+    }
+
+    function clearHighlightsInActivePart() {
+      const activePart = getActivePartContent();
+      if (!activePart) return;
+
+      activePart.querySelectorAll("mark[class^='user-highlight-']").forEach(mark => {
+        const textNode = document.createTextNode(mark.textContent);
+        mark.parentNode.replaceChild(textNode, mark);
+      });
+
+      activePart.normalize();
+      hideHighlightPopup();
+    }
+
+    document.addEventListener("mouseup", function() {
+      setTimeout(updateHighlightPopup, 10);
+    });
+
+    document.addEventListener("keyup", function() {
+      setTimeout(updateHighlightPopup, 10);
+    });
+
+    document.addEventListener("mousedown", function(event) {
+      const popup = getHighlightPopup();
+      if (popup && !popup.contains(event.target)) {
+        hideHighlightPopup();
+      }
+    });
+
+    window.addEventListener("scroll", hideHighlightPopup, true);
+    window.addEventListener("resize", hideHighlightPopup);
 
     document.addEventListener("input", updateProgress);
     document.addEventListener("change", updateProgress);
