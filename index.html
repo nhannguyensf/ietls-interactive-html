@@ -88,6 +88,25 @@
       color: var(--muted);
       font-size: 14px;
     }
+
+    .site-footer {
+      width: min(100%, 980px);
+      margin: 34px auto;
+      padding: 0 20px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .site-footer a {
+      color: var(--primary-dark);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .site-footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -110,6 +129,10 @@
       </a>
     </div>
   </main>
+
+  <footer class="site-footer" data-brand-footer></footer>
+
+  <script src="scripts/brand.js"></script>
 
   <script>
     if ("serviceWorker" in navigator) {

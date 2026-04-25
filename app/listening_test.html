@@ -363,6 +363,25 @@
       border: 1px solid var(--border);
     }
 
+    .site-footer {
+      max-width: 1150px;
+      margin: 28px auto 34px;
+      padding: 0 20px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .site-footer a {
+      color: var(--primary-dark);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .site-footer a:hover {
+      text-decoration: underline;
+    }
+
     .highlight-popup {
       position: fixed;
       display: none;
@@ -683,6 +702,10 @@
       </div>
     </div>
   </main>
+
+  <footer class="site-footer" data-brand-footer></footer>
+
+  <script src="../scripts/brand.js"></script>
 
   <script>
     const totalQuestions = 40;

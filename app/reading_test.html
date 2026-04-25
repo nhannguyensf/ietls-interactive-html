@@ -376,6 +376,25 @@
       background: #f9fafb;
     }
 
+    .site-footer {
+      max-width: 1200px;
+      margin: 28px auto 34px;
+      padding: 0 20px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .site-footer a {
+      color: var(--primary-dark);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .site-footer a:hover {
+      text-decoration: underline;
+    }
+
     .progress-wrap {
       max-width: 1200px;
       margin: 14px auto 0;
@@ -768,6 +787,10 @@
       </div>
     </div>
   </main>
+
+  <footer class="site-footer" data-brand-footer></footer>
+
+  <script src="../scripts/brand.js"></script>
 
   <script>
     const answers = {

@@ -1,9 +1,10 @@
-const CACHE_NAME = "ielts-practice-v6";
+const CACHE_NAME = "ielts-practice-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./app/listening_test.html",
   "./app/reading_test.html",
+  "./scripts/brand.js",
   "./assets/audio/vol7_test6_listening.mp3",
   "./manifest.webmanifest",
   "./assets/icons/app-icon.svg"
