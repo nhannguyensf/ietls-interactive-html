@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0284c7" />
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="icon" href="../assets/icons/app-icon.svg" type="image/svg+xml" />
+  <title>IELTS Reading Practice - VOL 8 TEST 10</title>
+  <style>
+    :root {
+      --bg: #f5fbff;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --accent: #14b8a6;
+      --border: #dbeafe;
+      --correct: #16a34a;
+      --wrong: #dc2626;
+      --warning: #f59e0b;
+      --soft-blue: #e0f2fe;
+      --soft-green: #ecfdf5;
+      --soft-red: #fef2f2;
+      --highlight-yellow: #fff3a3;
+      --highlight-green: #bbf7d0;
+      --highlight-pink: #fecdd3;
+      --shadow: 0 12px 28px rgba(2, 132, 199, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0284c7, #14b8a6);
+      color: white;
+      padding: 24px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      opacity: 0.86;
+      font-size: 14px;
+    }
+
+    .timer-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-weight: 700;
+    }
+
+    .timer-box button {
+      border: 0;
+      border-radius: 10px;
+      padding: 7px 10px;
+      cursor: pointer;
+      background: white;
+      color: #0369a1;
+      font-weight: 700;
+    }
+
+    .tabs {
+      max-width: 1200px;
+      margin: 20px auto 0;
+      padding: 0 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(15,23,42,0.04);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 18px auto 40px;
+      padding: 0 20px;
+    }
+
+    .passage-section {
+      display: none;
+    }
+
+    .passage-section.active {
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+    }
+
+    .card-header h2, .card-header h3 {
+      margin: 0;
+    }
+
+    .card-header small {
+      color: var(--muted);
+    }
+
+    .passage-body,
+    .questions-body {
+      padding: 20px;
+      max-height: calc(100vh - 220px);
+      overflow-y: auto;
+    }
+
+    .passage-title {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .passage-title h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .passage-title p {
+      margin: 4px 0;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .paragraph-label {
+      display: inline-flex;
+      width: 26px;
+      height: 26px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--soft-blue);
+      color: var(--primary);
+      font-weight: 800;
+      margin-right: 6px;
+    }
+
+    .question-group {
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .question-group:last-child {
+      border-bottom: none;
+    }
+
+    .instruction {
+      background: var(--soft-blue);
+      border-left: 4px solid var(--primary);
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin: 10px 0 18px;
+      color: #0369a1;
+      font-size: 14px;
+    }
+
+    .q {
+      margin: 14px 0;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .q-number {
+      font-weight: 800;
+      color: var(--primary);
+      margin-right: 6px;
+    }
+
+    .q-text {
+      margin-bottom: 10px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 15px;
+      outline: none;
+      background: white;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+
+    .inline-select {
+      width: auto;
+      min-width: 145px;
+      margin-top: 8px;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .option-line {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .option-line:hover {
+      background: #f9fafb;
+    }
+
+    .notes {
+      background: #fbfbfb;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-top: 8px;
+    }
+
+    .sentence {
+      margin: 10px 0;
+    }
+
+    .answer-slot {
+      display: inline-block;
+      min-width: 120px;
+      max-width: 170px;
+      margin: 0 4px;
+      vertical-align: middle;
+    }
+
+    .result {
+      display: none;
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .q.correct {
+      border-color: rgba(22,163,74,0.45);
+      background: var(--soft-green);
+    }
+
+    .q.wrong {
+      border-color: rgba(220,38,38,0.45);
+      background: var(--soft-red);
+    }
+
+    .q.correct .result,
+    .q.wrong .result {
+      display: block;
+    }
+
+    .correct-text { color: var(--correct); }
+    .wrong-text { color: var(--wrong); }
+
+    .bottom-panel {
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+      background: rgba(244,246,251,0.92);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      margin: 24px -20px 0;
+    }
+
+    .bottom-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .score {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 800;
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn:hover { background: var(--primary-dark); }
+
+    .btn.secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn.secondary:hover {
+      background: #f9fafb;
+    }
+
+    .progress-wrap {
+      max-width: 1200px;
+      margin: 14px auto 0;
+      padding: 0 20px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: rgba(255,255,255,0.22);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: #22c55e;
+      transition: width 0.25s;
+    }
+
+    .progress-text {
+      margin-top: 6px;
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+      text-align: right;
+    }
+
+
+    .card {
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      display: block;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .passage-title h2 {
+      color: var(--primary-dark);
+    }
+
+    .tab-btn.active {
+      box-shadow: 0 8px 18px rgba(2, 132, 199, 0.22);
+    }
+    .highlight-popup {
+      position: fixed;
+      display: none;
+      align-items: center;
+      gap: 7px;
+      z-index: 9999;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 10px;
+      box-shadow: 0 10px 24px rgba(2, 132, 199, 0.20);
+    }
+
+    .highlight-popup.visible {
+      display: flex;
+    }
+
+    .highlight-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 51, 0.18);
+      cursor: pointer;
+    }
+
+    .highlight-dot.yellow { background: var(--highlight-yellow); }
+    .highlight-dot.green { background: var(--highlight-green); }
+    .highlight-dot.pink { background: var(--highlight-pink); }
+
+    .highlight-clear-small {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+
+    mark.user-highlight-yellow {
+      background: var(--highlight-yellow);
+      padding: 1px 2px;
+      border-radius: 4px;
+    }
+
+    mark.user-highlight-green {
+      background: var(--highlight-green);
+      padding: 1px 2px;
+      border-radius: 4px;
+    }
+
+    mark.user-highlight-pink {
+      background: var(--highlight-pink);
+      padding: 1px 2px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 900px) {
+      header { position: static; }
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .passage-body,
+      .questions-body {
+        max-height: none;
+      }
+      .bottom-panel {
+        position: static;
+      }
+    }
+
+    @media print {
+      header, .tabs, .bottom-panel, .progress-wrap { display: none; }
+      .passage-section { display: block !important; page-break-after: always; }
+      .layout { display: block; }
+      .card { box-shadow: none; margin-bottom: 20px; }
+      .passage-body, .questions-body { max-height: none; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div>
+        <h1>IELTS Reading Practice</h1>
+        <div class="subtitle">VOL 8 TEST 10 · Interactive HTML demo</div>
+      </div>
+      <div class="timer-box">
+        <span>Time: <span id="timer">60:00</span></span>
+        <button onclick="toggleTimer()" id="timerBtn">Start</button>
+        <button onclick="resetTimer()">Reset</button>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+      <div id="progressText" class="progress-text">0 / 40 answered</div>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showPassage(1)">Passage 1</button>
+    <button class="tab-btn" onclick="showPassage(2)">Passage 2</button>
+    <button class="tab-btn" onclick="showPassage(3)">Passage 3</button>
+  </div>
+
+
+  <div id="highlightPopup" class="highlight-popup">
+    <button class="highlight-dot yellow" title="Yellow" onclick="highlightSelection('yellow')"></button>
+    <button class="highlight-dot green" title="Green" onclick="highlightSelection('green')"></button>
+    <button class="highlight-dot pink" title="Pink" onclick="highlightSelection('pink')"></button>
+    <button class="highlight-clear-small" title="Clear all highlights in this passage" onclick="clearHighlightsInActivePassage()">Clear</button>
+  </div>
+
+  <main>
+    <section id="passage1" class="passage-section active">
+      <div class="layout">
+        <article class="card">
+          <div class="card-header">
+            <h2>Passage 1</h2>
+            <small>Read the text and answer questions 1–13.</small>
+          </div>
+          <div class="passage-body">
+            <div class="passage-title">
+              <h2>The Whale Goes to Court</h2>
+              <p>A remarkable legal drama in the U.S.A.</p>
+            </div>
+            <p>In 1818 a whale became the subject of a controversial court case in New York City. The case involved an old law requiring those who sold fish oil to pay a fee in order to have their barrels inspected by city officials, and certified. However, an oil merchant named Samuel Judd refused to pay the inspection fee on three barrels of oil, claiming that no inspection was necessary because it was whale oil, and whales were not fish. The state disagreed, and so a date was set for a court to decide not a point of law, but the answer to a more fundamental question: is a whale a fish?</p>
+            <p>As simple as that question may appear today, the answer was far from obvious in the early nineteenth century. Indeed, the public debate in New York sparked off by the trial was sensational. At stake was nothing less than what most regarded as the order of nature. According to the commonly accepted scheme of things, if an animal was not a beast or a bird, it was a fish, regardless of whether it breathed air or suckled its young. For as long as anyone could remember, all non-human creatures had been organised according to the categories of birds, beasts and fish. For the average person the answer seemed perfectly obvious: whales swam in the sea and therefore they were fish.</p>
+            <p>Against this traditional framework stood the new Linnaean system of classification, which sought to introduce more scientific values into the classification of living things. Barely half a century old in 1818, the Linnaean system controversially classified whales as mammals because they shared two mammalian characteristics: they were warm-blooded and breathed air.</p>
+            <p>So the trial began in December 1818. Judd’s defence lawyers chose as their star witness one of New York’s most prominent figures, the congressman Samuel Mitchill. Referred to as a ‘living encyclopaedia’ and a ‘walking library’, Mitchill was a renowned natural history lecturer at the College of Physicians and Surgeons who liked to dare his students to test his knowledge of the natural world. ‘Show me the fin, and I will name the fish,’ he boasted. Scientifically, it was an open-and-shut case, and Judd’s defence lawyers believed they only had to do one simple thing to win the trial: insist that it be decided by biology alone. Mitchill seemed fully qualified for this role.</p>
+            <p>But this is where the case becomes interesting, and is the reason why the trial of the whale is not some dusty nineteenth-century obscurity. For rather than debate Mitchill on his area of expertise, lawyers for the New York City fish-oil inspectors chose a different tack. Lead counsel William Sampson turned the trial into a contest between scientific learning and common sense, by asking plain-spoken whalers to make their case before the jury.</p>
+            <p>The crux of Sampson’s case was the trial’s implication with regard to humans, should Judd be found not guilty. Sampson told jury members that if they accepted Mitchill’s testimony on whales, they were obliged to accept a lower place for their own kind in the natural order. As a result, Mitchill’s day in court did not go smoothly, not least because he was forced to acknowledge serious disputes among his peers regarding exactly how to classify biological organisms. Sampson then took aim at Mitchill himself and what he represented: privileged aristocrats from the scientific community who had lost touch with reality. The smooth-talking Sampson then claimed Mitchill’s beliefs had their origin in Europe – something he rightly judged would infuriate the citizens of always-independent New York. This revolutionary new thinking, Sampson argued, was something that honest working New Yorkers could do without. No longer was this a case about barrels of oil, but the proper place of scientific knowledge in the U.S.A.</p>
+            <p>Ultimately, what won the case for Samuel Judd were not Mitchill’s scientific arguments, but testimony from a different sphere altogether. In New York’s markets, the merchants implicitly understood that whale oil and fish oil were not the same: whale oil could be used as a fuel for lamps because it could be burned without giving off smoke; fish oil, on the other hand, was nasty, impure stuff used primarily in tanning leather. In the end it was this testimony that led to Judd’s victory.</p>
+            <p>The trial of the whale still has relevance today, when the court of public opinion remains easily swayed by sceptics. The 1818 trial was really about this question: who gets to decide on the place of the natural world in the human world – scientific experts or public opinion? Whether the issue today is the effects of human activity on the climate of this planet, or one of many other contemporary topics, the legacy of Judd’s case continues to be of relevance.</p>
+          </div>
+        </article>
+
+        <aside class="card">
+          <div class="card-header">
+            <h3>Questions 1–13</h3>
+            <small>Answer all questions for Passage 1.</small>
+          </div>
+          <div class="questions-body">
+            <div class="question-group">
+              <h3>Questions 1–7</h3>
+              <div class="instruction">Choose TRUE if the statement agrees with the information, FALSE if it contradicts it, or NOT GIVEN if there is no information.</div>
+              <div id="q1" class="q"><div class="q-text"><span class="q-number">1</span>An inspection fee on fish oil was introduced in New York in 1818.</div><select data-q="1" class="inline-select"><option value="">Choose</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="result"></div></div>
+              <div id="q2" class="q"><div class="q-text"><span class="q-number">2</span>Samuel Judd argued that the inspection fee should exclude whale oil.</div><select data-q="2" class="inline-select"><option value="">Choose</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="result"></div></div>
+              <div id="q3" class="q"><div class="q-text"><span class="q-number">3</span>Judd had been in trouble with city officials before the inspection fee disagreement.</div><select data-q="3" class="inline-select"><option value="">Choose</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="result"></div></div>
+              <div id="q4" class="q"><div class="q-text"><span class="q-number">4</span>Many New Yorkers were interested in the court case at the time.</div><select data-q="4" class="inline-select"><option value="">Choose</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="result"></div></div>
+              <div id="q5" class="q"><div class="q-text"><span class="q-number">5</span>Traditionally, non-human creatures had been classified in one of three groups.</div><select data-q="5" class="inline-select"><option value="">Choose</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="result"></div></div>
+              <div id="q6" class="q"><div class="q-text"><span class="q-number">6</span>Generally speaking, ordinary people thought fish were the lowest form of life.</div><select data-q="6" class="inline-select"><option value="">Choose</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="result"></div></div>
+              <div id="q7" class="q"><div class="q-text"><span class="q-number">7</span>Whales were excluded from the Linnaean system in 1818.</div><select data-q="7" class="inline-select"><option value="">Choose</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="result"></div></div>
+            </div>
+
+            <div class="question-group">
+              <h3>Questions 8–13</h3>
+              <div class="instruction">Complete the notes. Write ONE WORD ONLY from the text for each answer.</div>
+              <div class="notes">
+                <p><strong>The Trial of December 1818</strong></p>
+                <p><strong>The Personalities</strong></p>
+                <div id="q8" class="q sentence">Samuel Mitchill worked as a congressman and a <input data-q="8" class="answer-slot" type="text">.<div class="result"></div></div>
+                <p>The defence wanted Mitchill to present the biology of the case.</p>
+                <div id="q9" class="q sentence">William Sampson called <input data-q="9" class="answer-slot" type="text"> as witnesses in order to appeal to the common sense of the jury.<div class="result"></div></div>
+                <p><strong>The Arguments</strong></p>
+                <p>Sampson’s case was based on the consequences for humans if Judd won.</p>
+                <p>Mitchill admitted that scientists had disputes about classification.</p>
+                <div id="q10" class="q sentence">New Yorkers disliked Mitchill because his ideas came from <input data-q="10" class="answer-slot" type="text">.<div class="result"></div></div>
+                <p><strong>Conclusions</strong></p>
+                <div id="q11" class="q sentence">In the end it was statements from local <input data-q="11" class="answer-slot" type="text">, not Mitchill’s testimony, which helped Judd win.<div class="result"></div></div>
+                <div id="q12" class="q sentence">Whale oil made a good <input data-q="12" class="answer-slot" type="text"> because it was clean.<div class="result"></div></div>
+                <div id="q13" class="q sentence">Judd’s case is relevant today, e.g. in the debate about Earth’s <input data-q="13" class="answer-slot" type="text">.<div class="result"></div></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="passage2" class="passage-section">
+      <div class="layout">
+        <article class="card">
+          <div class="card-header">
+            <h2>Passage 2</h2>
+            <small>Read the text and answer questions 14–26.</small>
+          </div>
+          <div class="passage-body">
+            <div class="passage-title"><h2>Herbal Medicine</h2></div>
+            <p><span class="paragraph-label">A</span>There is an age-old practice of harvesting plants and herbs in their natural environment for use as medicines. And today there is huge potential for New Zealand to develop a herb industry based on the excellent growing conditions and expertise there, according to Phil Rasmussen, a pharmacist and medical herbalist. Take arnica for example, a popular pharmaceutical herb used to treat bruises and joint problems. Traditionally collected by Romanian communities in Europe, it is now in high demand worldwide as interest develops in the capabilities of the small alpine plant. A 2008 report for the Plant and Food Research organization concluded that New Zealand has a good opportunity to cultivate arnica flowers and roots for the international markets. However, the initiative was stopped in its tracks when the government abruptly halted funding for the research programme. It was an unjustified move, according to agronomist Malcolm Douglas, based on a number of inaccurate views about weed invasion.</p>
+            <p><span class="paragraph-label">B</span>The history of herbal medicines in New Zealand has long featured disagreements of this sort. For the early Maori people, the original inhabitants of New Zealand, the forest was well stocked with edible plants that were an obvious source of nutrition, but that were taken for the relief of pain as well. While the earliest European doctors in New Zealand relied on imported dried herbs, many were keen to include native plants in their practices: in his book published in 1891, herbalist James Neil described manuka and koromiko as among New Zealand's most valuable herbs. Despite its popularity among some, however, herbalism continued to have its detractors. In 1907 Neil, president of the then very young New Zealand Association of Medical Herbalists (NZAMH), petitioned parliament for legal status for herbalists, but he was unsuccessful. The Evening Post newspaper perhaps summed up the opposing position by claiming that herbalism “is obsolete”.</p>
+            <p><span class="paragraph-label">C</span>In fact, traditional Maori medicine faced a more determined challenge. In 1908 the government passed a controversial law that had the effect of restricting traditional herbal practice, or pushing it underground. Then for a brief period in the mid-20th century, herbal medicine was largely ignored, shunned by the majority of the medical profession, and absent from medical school curricula. But a centuries-old tradition was not going to disappear so easily, and in the 1980s the NZAMH was revived, and it became possible to complete a course in herbal medicine at several polytechnics around the country. However, the problem remained of how to connect the culture of plant-based medicine with conventional scientific thinking in order to promote herbal use within the general population. For many years, the limited evidence there was that herbal medicines worked was undermined by lack of interest among general practitioners and within the scientific community.</p>
+            <p><span class="paragraph-label">D</span>Today, the ideas of herbalists in the 1980s — eat a varied diet, include lots of fresh fruit and vegetables, recognise stress — are completely accepted by the medical establishment and widely practiced in society as a whole. Natural health products are big sellers in pharmacies, and global pharmaceutical companies are buying up natural supplement brands or developing their own.</p>
+            <p><span class="paragraph-label">E</span>What’s more, according to Rasmussen, robust clinical trials show that herbal medicine is generally safe — safer than most drugs. “It doesn’t do everything,” he says, “but there’s a lot it does do, particularly in terms of preventative health care.” One significant issue for today’s export-oriented herbal medicine producers is the question of how to guarantee standards for consumers in different countries. In other words, there is the need for some form of globally recognised system of documentation. Rasmussen's range of extracts are produced under the Good Manufacturing Practice (GMP) scheme, which is respected around the world. So too is the range produced by Sandra Clair, who says that such assurance is expensive but necessary if you want to export herbal remedies to the rest of the world. Moves to launch a joint Australia-New Zealand agency to regulate herbal remedies under a single, streamlined licensing process have recently been revived, after being abandoned in 2007 through lack of support in parliament.</p>
+            <p><span class="paragraph-label">F</span>There are those in the industry who support further regulation still. According to Rasmussen, some herbs should require a prescription from a suitably qualified medical herbalist or doctor. For example, consumers shouldn't be able to go to their local supermarket and buy St John's Wort, according to Rasmussen, because it can interact in harmful ways with at least ten pharmaceutical drugs. Isla Burgess, who is part of the International Research Group for the Conservation of Medicinal Plants, agrees that tighter regulation is necessary, but for a different reason. “More than 400,000 tonnes of medicinal and aromatic plants are traded in the world each year,” says Burgess. “The great majority of these are harvested from the wild, so they each have an impact on their local ecosystem.” She gives the example of elm trees in the USA ringbarked and stripped for the growing market for a product called “slippery elm”: this endangered tree should be protected. But others argue that more regulation would be prohibitively expensive for all but the largest manufacturers — a change, cautions Clair, that would probably put some local companies out of business. So, for the time being at least, it seems that the topic of herbal medicines will continue to provoke debate.</p>
+          </div>
+        </article>
+
+        <aside class="card">
+          <div class="card-header">
+            <h3>Questions 14–26</h3>
+            <small>Answer all questions for Passage 2.</small>
+          </div>
+          <div class="questions-body">
+            <div class="question-group">
+              <h3>Questions 14–17</h3>
+              <div class="instruction">Which paragraph contains the following information? You may use any letter more than once.</div>
+              <div id="q14" class="q"><div class="q-text"><span class="q-number">14</span>A reference to the interest shown by large corporations in herbal remedies.</div><select data-q="14" class="inline-select paragraph-select"></select><div class="result"></div></div>
+              <div id="q15" class="q"><div class="q-text"><span class="q-number">15</span>Examples of the uses of one particular herbal medicine.</div><select data-q="15" class="inline-select paragraph-select"></select><div class="result"></div></div>
+              <div id="q16" class="q"><div class="q-text"><span class="q-number">16</span>A warning that small companies cannot afford stricter controls of the herbal medicine industry.</div><select data-q="16" class="inline-select paragraph-select"></select><div class="result"></div></div>
+              <div id="q17" class="q"><div class="q-text"><span class="q-number">17</span>A statement by one expert about the effectiveness and limitations of herbal medicines.</div><select data-q="17" class="inline-select paragraph-select"></select><div class="result"></div></div>
+            </div>
+
+            <div class="question-group">
+              <h3>Questions 18–21</h3>
+              <div class="instruction">Complete the summary. Write ONE WORD ONLY from the passage for each answer.</div>
+              <div class="notes">
+                <p><strong>The history of herbal medicines in New Zealand</strong></p>
+                <div id="q18" class="q sentence">Originally, the Maori people consumed plants to help deal with <input data-q="18" class="answer-slot" type="text"> and also as food.<div class="result"></div></div>
+                <div id="q19" class="q sentence">When Europeans settled in the country, a <input data-q="19" class="answer-slot" type="text"> by James Neil showed that some of them also recognized the medicinal value of native plants.<div class="result"></div></div>
+                <div id="q20" class="q sentence">The following year, the use of herbal medicines was made more difficult because of a new <input data-q="20" class="answer-slot" type="text">.<div class="result"></div></div>
+                <div id="q21" class="q sentence">Then, in the 1980s, a number of institutions started offering a <input data-q="21" class="answer-slot" type="text"> in the subject.<div class="result"></div></div>
+              </div>
+            </div>
+
+            <div class="question-group">
+              <h3>Questions 22–26</h3>
+              <div class="instruction">Match each statement with the correct person: A Phil Rasmussen, B Malcolm Douglas, C Sandra Clair, D Isla Burgess.</div>
+              <div id="q22" class="q"><div class="q-text"><span class="q-number">22</span>There ought to be restrictions on where you can buy some herbal medicines.</div><select data-q="22" class="inline-select person-select"></select><div class="result"></div></div>
+              <div id="q23" class="q"><div class="q-text"><span class="q-number">23</span>The authorities stopped supporting one project without a good reason.</div><select data-q="23" class="inline-select person-select"></select><div class="result"></div></div>
+              <div id="q24" class="q"><div class="q-text"><span class="q-number">24</span>The herbal medicine industry has an effect on the environment where some plant-based medicines are found.</div><select data-q="24" class="inline-select person-select"></select><div class="result"></div></div>
+              <div id="q25" class="q"><div class="q-text"><span class="q-number">25</span>New Zealand has the human resources and natural environment to grow herbs commercially.</div><select data-q="25" class="inline-select person-select"></select><div class="result"></div></div>
+              <div id="q26" class="q"><div class="q-text"><span class="q-number">26</span>It is essential for herbal medicines to have international certification, despite the cost.</div><select data-q="26" class="inline-select person-select"></select><div class="result"></div></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="passage3" class="passage-section">
+      <div class="layout">
+        <article class="card">
+          <div class="card-header">
+            <h2>Passage 3</h2>
+            <small>Read the text and answer questions 27–40.</small>
+          </div>
+          <div class="passage-body">
+            <div class="passage-title">
+              <h2>Science in the kitchen</h2>
+              <p>Chefs are bringing a new standard of experimentation and precision to their cooking.</p>
+            </div>
+            <p>There is a recent movement in the world of food, in which chefs are collaborating with scientists to teach themselves the chemistry and physics of cuisine. Even academics are getting excited about the results. Colin Osborne of the Royal Society of Chemistry in London is enthusiastic: “Chefs are using unusual methods to produce exciting dishes that would be impossible without modern science,” he says. You may wonder what’s wrong with long established culinary traditions. The fact is, many culturally ingrained cooking methods are less than perfect. Osborne gives the example of the common belief that frying meat seals in moisture, while researchers who weighed the meat actually found that moisture is lost in the process. Another example is the age old technique of adding salt when boiling vegetables to raise the water’s boiling point, thus cooking the vegetables faster. In fact, the amount of salt typically added does not raise the temperature significantly — or improve the flavour, since only a minuscule amount is absorbed.</p>
+            <p>Hervé This, director of the Molecular Gastronomy team at the French National Institute for Agricultural Research, spends much of his time trying to disprove culinary old wives’ tales. He is empirically testing traditional beliefs about cooking and disproving the more absurd, tackling such questions as whether it’s better to add vinaigrette to potato salad while the potatoes are still hot. “The first modern chemists used kitchen equipment to do their experiments,” Hervé This explains. “Since then, chemistry has undergone massive changes — but cooking methods have remained largely as they were in the Middle Ages.”</p>
+            <p>“It’s seriously important work,” says Peter Barham, a physicist at Bristol University. “If you understand what’s going on in cooking, you’ll be better equipped to improve it.” Barham contends that it’s difficult to get consistent results from cookery books, because recipes are typically poorly written. In stark contrast, he notes, scientific papers are subject to peer review, whereby experts pore over experiments to ensure they can be accurately reproduced.</p>
+            <p>Barham also collaborates with leading British chef Heston Blumenthal, proprietor of The Fat Duck, a restaurant in the south of England. The restaurant is widely regarded as one of the best in the world, serving delightfully unexpected dishes such as nitro scrambled egg and bacon ice cream.</p>
+            <p>When Simon Campbell of the Royal Society of Chemistry bestowed an honorary fellowship on Blumenthal for creative applications of science to cooking, he said: “The scientific community admires and respects the research that Mr Blumenthal has performed to harness cuisine to science. Through his inquisitive and innovative approach to food he has underlined spectacularly how chemistry permeates all aspects of texture, taste and smell.”</p>
+            <p>Although some dishes sound gimmicky, this innovative approach to cooking is paying off. El Bulli in Catalonia, Spain — directed by chef Ferran Adrià — is another leading restaurant thus enthusiastically engaging with scientific techniques. It closes for six months of the year to allow six months for research and development, yet is rumoured to be booked out for an entire year in advance.</p>
+            <p>Such restaurants are part of the movement known as “molecular gastronomy”, an expression coined by physicist Nicholas Kurti, working in collaboration with Hervé This. Kurti once quipped that “it is a sad reflection that we know the temperature inside the stars better than the temperature inside a soufflé.” Kurti and Hervé This devised the expression “molecular gastronomy” during the 1980s to denote the science of culinary transformations and eating phenomena, and differentiate it from food science.</p>
+            <p>“Twenty years ago the worlds of science and cooking were neatly compartmentalised,” agrees author Harold McGee, a top food science writer. “There was food science: an applied science mainly concerned with understanding the materials and processes of industrial manufacturing. And there was the world of domestic and restaurant cooking, traditional crafts that had never attracted much scientific attention.”</p>
+            <p>A lot has changed in the two decades since he published his influential book on the topic. In a revised edition, McGee says the book was “riding a rising wave of general interest in food, a wave that grew and grew, and knocked down the barriers between science and cooking, especially in the last decade. Science has found its way into the kitchen, and cooking into laboratories.”</p>
+            <p>So what does the future hold? Rachel Edwards Stuart is a graduate PhD student who is studying some remarkable food additives, including modified cellulose gels that solidify on heating and melt again as they are cooled. The idea is to make dishes that develop different flavours as they are eaten. Her other project is creating drinks that change flavour.</p>
+            <p>“The concept came from Roald Dahl’s children’s book Charlie and the Chocolate Factory, where Willy Wonka makes a bubble gum that is a whole meal in one sweet,” she says. Unfortunately, Edwards Stuart was unable to say more, due to a confidentiality agreement with the restaurant for which she conducts her research.</p>
+            <p>While Hervé This, Blumenthal and Edwards Stuart are the pioneers, the next phase will be to bring science into kitchens at home. Already there are books that provide an insight into the wondrous chemistry that turns humble ingredients into cuisine. And as the movement grows it will not be long before we see laboratory test tubes, flasks and maybe the odd centrifuge on sale next to carving knives, rolling pins and pressure cookers.</p>
+            <p><em>soufflé: A French dish made using beaten eggs.</em></p>
+          </div>
+        </article>
+
+        <aside class="card">
+          <div class="card-header">
+            <h3>Questions 27–40</h3>
+            <small>Answer all questions for Passage 3.</small>
+          </div>
+          <div class="questions-body">
+            <div class="question-group">
+              <h3>Questions 27–31</h3>
+              <div class="instruction">Choose YES, NO, or NOT GIVEN.</div>
+              <div id="q27" class="q"><div class="q-text"><span class="q-number">27</span>Scientists and chefs have a long established history of working together.</div><select data-q="27" class="inline-select ynng-select"></select><div class="result"></div></div>
+              <div id="q28" class="q"><div class="q-text"><span class="q-number">28</span>Traditional ways of cooking tend to be supported by modern scientific research.</div><select data-q="28" class="inline-select ynng-select"></select><div class="result"></div></div>
+              <div id="q29" class="q"><div class="q-text"><span class="q-number">29</span>The food produced by Heston Blumenthal at The Fat Duck is unconventional.</div><select data-q="29" class="inline-select ynng-select"></select><div class="result"></div></div>
+              <div id="q30" class="q"><div class="q-text"><span class="q-number">30</span>El Bulli is the most popular restaurant of its kind in Spain.</div><select data-q="30" class="inline-select ynng-select"></select><div class="result"></div></div>
+              <div id="q31" class="q"><div class="q-text"><span class="q-number">31</span>McGee has plans to open his own restaurant.</div><select data-q="31" class="inline-select ynng-select"></select><div class="result"></div></div>
+            </div>
+
+            <div class="question-group">
+              <h3>Questions 32–35</h3>
+              <div class="instruction">Choose the correct answer.</div>
+              <div id="q32" class="q">
+                <div class="q-text"><span class="q-number">32</span>The purpose of Hervé This’s research is to</div>
+                <select data-q="32"><option value="">Choose</option><option value="A">A determine how chemistry has influenced modern cooking.</option><option value="B">B provide a scientific basis for traditional cooking methods.</option><option value="C">C show that long held beliefs about cooking are wrong.</option><option value="D">D offer practical advice to those who cook at home.</option></select>
+                <div class="result"></div>
+              </div>
+              <div id="q33" class="q">
+                <div class="q-text"><span class="q-number">33</span>According to Peter Barham, one difference between cookery books and scientific papers is that</div>
+                <select data-q="33"><option value="">Choose</option><option value="A">A scientific papers are checked by more people.</option><option value="B">B the writers of cookery books need not be qualified.</option><option value="C">C the language used in scientific papers is more complicated.</option><option value="D">D recipe writers can profit more financially than scientific writers.</option></select>
+                <div class="result"></div>
+              </div>
+              <div id="q34" class="q">
+                <div class="q-text"><span class="q-number">34</span>Nicholas Kurti referred to a soufflé in order to</div>
+                <select data-q="34"><option value="">Choose</option><option value="A">A give an example of a dish that can easily be ruined by excess heat.</option><option value="B">B highlight the inadequacy of scientific research into cooking.</option><option value="C">C show that cooking is similar to other scientific processes.</option><option value="D">D confess his own limitations as a cook.</option></select>
+                <div class="result"></div>
+              </div>
+              <div id="q35" class="q">
+                <div class="q-text"><span class="q-number">35</span>One aspect of Rachel Edwards Stuart’s research involves</div>
+                <select data-q="35"><option value="">Choose</option><option value="A">A matching solid food to complementary liquids.</option><option value="B">B determining which tastes appeal to young people.</option><option value="C">C studying how food changes form in certain conditions.</option><option value="D">D evaluating the risk of damage from using preservatives in food.</option></select>
+                <div class="result"></div>
+              </div>
+            </div>
+
+            <div class="question-group">
+              <h3>Questions 36–40</h3>
+              <div class="instruction">Complete each sentence with the correct ending, A–H.</div>
+              <div class="notes">
+                <p><strong>List of Endings</strong></p>
+                <p>A there used to be a clear division between cooking and science.</p>
+                <p>B well established cooking traditions have come back into fashion.</p>
+                <p>C cooking has failed to keep pace with scientific developments.</p>
+                <p>D an imaginary invention inspired scientific research.</p>
+                <p>E science has helped cooks make meals that would otherwise be unachievable.</p>
+                <p>F an award was given to acknowledge work in scientific gastronomy.</p>
+                <p>G there is new terminology to describe the study of culinary reactions.</p>
+                <p>H the home cook is not able to achieve the same level of innovation as a professional chef.</p>
+              </div>
+              <div id="q36" class="q"><div class="q-text"><span class="q-number">36</span>Colin Osborne explains that ...</div><select data-q="36" class="inline-select ending-select"></select><div class="result"></div></div>
+              <div id="q37" class="q"><div class="q-text"><span class="q-number">37</span>Hervé This’s research has led him to the view that ...</div><select data-q="37" class="inline-select ending-select"></select><div class="result"></div></div>
+              <div id="q38" class="q"><div class="q-text"><span class="q-number">38</span>Thanks to the joint effort of Nicholas Kurti and Hervé This, ...</div><select data-q="38" class="inline-select ending-select"></select><div class="result"></div></div>
+              <div id="q39" class="q"><div class="q-text"><span class="q-number">39</span>Food writer Harold McGee says that ...</div><select data-q="39" class="inline-select ending-select"></select><div class="result"></div></div>
+              <div id="q40" class="q"><div class="q-text"><span class="q-number">40</span>Rachel Edwards Stuart gives an example of a case where ...</div><select data-q="40" class="inline-select ending-select"></select><div class="result"></div></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="bottom-panel">
+      <div class="bottom-inner">
+        <div class="score" id="scoreText">Score: -- / 40</div>
+        <div class="actions">
+          <button class="btn" onclick="checkAnswers()">Check Answers</button>
+          <button class="btn secondary" onclick="showAllAnswers()">Show Answers</button>
+          <button class="btn secondary" onclick="clearAnswers()">Clear</button>
+          <button class="btn secondary" onclick="window.print()">Print</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const answers = {
+      // Official answer key from: KEY VOL 8 TEST 10.docx
+      1: "FALSE", 2: "TRUE", 3: "NOT GIVEN", 4: "TRUE", 5: "TRUE", 6: "NOT GIVEN", 7: "FALSE",
+      8: "lecturer", 9: "whalers", 10: "Europe", 11: "merchants", 12: "fuel", 13: "climate",
+      14: "D", 15: "A", 16: "F", 17: "E", 18: "pain", 19: "book", 20: "law", 21: "course",
+      22: "A", 23: "B", 24: "D", 25: "A", 26: "C",
+      27: "NO", 28: "NO", 29: "YES", 30: "NOT GIVEN", 31: "NOT GIVEN",
+      32: "C", 33: "A", 34: "B", 35: "C", 36: "E", 37: "C", 38: "G", 39: "A", 40: "D"
+    };
+
+    const explanations = {
+      1: "The passage says it involved an old law, so it was not introduced in 1818.",
+      2: "Judd refused to pay because the oil was whale oil and whales were not fish.",
+      3: "The text does not say Judd had previous trouble with city officials.",
+      4: "The passage says the public debate in New York was sensational.",
+      5: "The text says non-human creatures were organised as birds, beasts and fish.",
+      6: "The text does not say ordinary people thought fish were the lowest form of life.",
+      7: "The Linnaean system classified whales as mammals, so whales were not excluded from it.",
+      8: "Mitchill was a renowned natural history lecturer.",
+      9: "Sampson asked plain-spoken whalers to make their case before the jury.",
+      10: "Sampson claimed Mitchill’s beliefs had their origin in Europe.",
+      11: "The testimony from merchants helped Judd win.",
+      12: "Whale oil could be used as a fuel for lamps.",
+      13: "The passage links the case to debate about the planet’s climate.",
+      14: "Paragraph D mentions global pharmaceutical companies buying natural supplement brands.",
+      15: "Paragraph A says arnica is used to treat bruises and joint problems.",
+      16: "Paragraph F says stricter regulation could put some local companies out of business.",
+      17: "Paragraph E says herbal medicine does not do everything but does a lot, especially in preventative health care.",
+      18: "The Maori used plants for the relief of pain and as food.",
+      19: "James Neil described native herbs in his book.",
+      20: "In 1908 the government passed a law restricting traditional herbal practice.",
+      21: "In the 1980s, several polytechnics offered a course in herbal medicine.",
+      22: "Rasmussen says some herbs should require a prescription.",
+      23: "Malcolm Douglas says the funding halt was unjustified.",
+      24: "Isla Burgess says wild harvesting affects local ecosystems.",
+      25: "Phil Rasmussen says New Zealand has excellent growing conditions and expertise.",
+      26: "Sandra Clair says certification is expensive but necessary for export.",
+      27: "The passage says collaboration between chefs and scientists is a recent movement.",
+      28: "The writer says many culturally ingrained cooking methods are less than perfect.",
+      29: "The Fat Duck serves delightfully unexpected dishes such as nitro scrambled egg and bacon ice cream.",
+      30: "The passage says El Bulli is a leading restaurant, but not that it is the most popular in Spain.",
+      31: "There is no information that McGee plans to open his own restaurant.",
+      32: "Hervé This spends much of his time disproving culinary old wives’ tales.",
+      33: "Scientific papers are peer reviewed by experts to ensure experiments can be reproduced.",
+      34: "Kurti’s soufflé quote highlights how little science had examined cooking.",
+      35: "Rachel Edwards Stuart studies gels that solidify on heating and melt when cooled.",
+      36: "Colin Osborne says modern science lets chefs produce dishes that would otherwise be impossible.",
+      37: "Hervé This says chemistry has changed greatly, but cooking methods have remained largely the same.",
+      38: "Kurti and Hervé This devised the term molecular gastronomy.",
+      39: "McGee says science and cooking used to be neatly compartmentalised.",
+      40: "Rachel Edwards Stuart says the concept came from Charlie and the Chocolate Factory."
+    };
+
+    function fillSelects() {
+      document.querySelectorAll(".paragraph-select").forEach(sel => {
+        sel.innerHTML = '<option value="">Choose</option>' + ["A","B","C","D","E","F"].map(x => `<option value="${x}">${x}</option>`).join("");
+      });
+      document.querySelectorAll(".person-select").forEach(sel => {
+        sel.innerHTML = '<option value="">Choose</option><option value="A">A Phil Rasmussen</option><option value="B">B Malcolm Douglas</option><option value="C">C Sandra Clair</option><option value="D">D Isla Burgess</option>';
+      });
+      document.querySelectorAll(".ynng-select").forEach(sel => {
+        sel.innerHTML = '<option value="">Choose</option><option>YES</option><option>NO</option><option>NOT GIVEN</option>';
+      });
+      document.querySelectorAll(".ending-select").forEach(sel => {
+        sel.innerHTML = '<option value="">Choose</option>' + ["A","B","C","D","E","F","G","H"].map(x => `<option value="${x}">${x}</option>`).join("");
+      });
+    }
+
+    function normalize(value) {
+      return String(value || "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toUpperCase();
+    }
+
+    function getInput(qNum) {
+      return document.querySelector(`[data-q="${qNum}"]`);
+    }
+
+    function updateProgress() {
+      let answered = 0;
+      for (let i = 1; i <= 40; i++) {
+        const input = getInput(i);
+        if (input && input.value.trim() !== "") answered++;
+      }
+      document.getElementById("progressFill").style.width = `${answered / 40 * 100}%`;
+      document.getElementById("progressText").textContent = `${answered} / 40 answered`;
+    }
+
+    function checkAnswers() {
+      let score = 0;
+      for (let i = 1; i <= 40; i++) {
+        const input = getInput(i);
+        const box = document.getElementById(`q${i}`);
+        const result = box.querySelector(".result");
+        box.classList.remove("correct", "wrong");
+
+        const user = normalize(input.value);
+        const correct = normalize(answers[i]);
+
+        if (user === "") {
+          result.innerHTML = `<span class="wrong-text">No answer. Correct answer: ${answers[i]}</span><br><span>${explanations[i] || ""}</span>`;
+          box.classList.add("wrong");
+        } else if (user === correct) {
+          score++;
+          result.innerHTML = `<span class="correct-text">Correct</span><br><span>${explanations[i] || ""}</span>`;
+          box.classList.add("correct");
+        } else {
+          result.innerHTML = `<span class="wrong-text">Incorrect. Correct answer: ${answers[i]}</span><br><span>${explanations[i] || ""}</span>`;
+          box.classList.add("wrong");
+        }
+      }
+      document.getElementById("scoreText").textContent = `Score: ${score} / 40`;
+      updateProgress();
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+
+    function showAllAnswers() {
+      for (let i = 1; i <= 40; i++) {
+        const input = getInput(i);
+        if (input) input.value = answers[i];
+      }
+      updateProgress();
+    }
+
+    function clearAnswers() {
+      for (let i = 1; i <= 40; i++) {
+        const input = getInput(i);
+        if (input) input.value = "";
+        const box = document.getElementById(`q${i}`);
+        if (box) {
+          box.classList.remove("correct", "wrong");
+          const result = box.querySelector(".result");
+          if (result) result.innerHTML = "";
+        }
+      }
+      document.getElementById("scoreText").textContent = "Score: -- / 40";
+      updateProgress();
+    }
+
+    function showPassage(num) {
+      document.querySelectorAll(".passage-section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(`passage${num}`).classList.add("active");
+      document.querySelectorAll(".tab-btn").forEach((btn, idx) => {
+        btn.classList.toggle("active", idx === num - 1);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    let totalSeconds = 60 * 60;
+    let timerId = null;
+    let running = false;
+
+    function renderTimer() {
+      const min = Math.floor(totalSeconds / 60);
+      const sec = totalSeconds % 60;
+      document.getElementById("timer").textContent = `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById("timerBtn");
+      if (!running) {
+        running = true;
+        btn.textContent = "Pause";
+        timerId = setInterval(() => {
+          if (totalSeconds > 0) {
+            totalSeconds--;
+            renderTimer();
+          } else {
+            clearInterval(timerId);
+            running = false;
+            btn.textContent = "Start";
+            alert("Time is up!");
+          }
+        }, 1000);
+      } else {
+        running = false;
+        btn.textContent = "Start";
+        clearInterval(timerId);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerId);
+      running = false;
+      totalSeconds = 60 * 60;
+      document.getElementById("timerBtn").textContent = "Start";
+      renderTimer();
+    }
+
+
+
+    let savedHighlightRange = null;
+
+    function getActivePassageBody() {
+      return document.querySelector(".passage-section.active .passage-body");
+    }
+
+    function getHighlightPopup() {
+      return document.getElementById("highlightPopup");
+    }
+
+    function hideHighlightPopup() {
+      const popup = getHighlightPopup();
+      if (popup) popup.classList.remove("visible");
+    }
+
+    function updateHighlightPopup() {
+      const selection = window.getSelection();
+      const popup = getHighlightPopup();
+      const activePassage = getActivePassageBody();
+
+      if (!selection || !popup || !activePassage || selection.rangeCount === 0 || selection.toString().trim() === "") {
+        hideHighlightPopup();
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+
+      if (!activePassage.contains(range.commonAncestorContainer)) {
+        hideHighlightPopup();
+        return;
+      }
+
+      savedHighlightRange = range.cloneRange();
+
+      const rect = range.getBoundingClientRect();
+      const popupWidth = 190;
+      let left = rect.left + rect.width / 2 - popupWidth / 2;
+      let top = rect.top - 52;
+
+      if (left < 10) left = 10;
+      if (left + popupWidth > window.innerWidth - 10) left = window.innerWidth - popupWidth - 10;
+      if (top < 10) top = rect.bottom + 12;
+
+      popup.style.left = left + "px";
+      popup.style.top = top + "px";
+      popup.classList.add("visible");
+    }
+
+    function highlightSelection(color) {
+      const activePassage = getActivePassageBody();
+      let range = savedHighlightRange;
+
+      if (!range) {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+          range = selection.getRangeAt(0);
+        }
+      }
+
+      if (!range || !activePassage || !activePassage.contains(range.commonAncestorContainer)) {
+        alert("Please select text inside the active reading passage first.");
+        hideHighlightPopup();
+        return;
+      }
+
+      const mark = document.createElement("mark");
+      mark.className = "user-highlight-" + color;
+
+      try {
+        range.surroundContents(mark);
+      } catch (error) {
+        const selectedText = range.extractContents();
+        mark.appendChild(selectedText);
+        range.insertNode(mark);
+      }
+
+      const selection = window.getSelection();
+      if (selection) selection.removeAllRanges();
+
+      savedHighlightRange = null;
+      hideHighlightPopup();
+    }
+
+    function clearHighlightsInActivePassage() {
+      const activePassage = getActivePassageBody();
+      if (!activePassage) return;
+
+      activePassage.querySelectorAll("mark[class^='user-highlight-']").forEach(mark => {
+        const textNode = document.createTextNode(mark.textContent);
+        mark.parentNode.replaceChild(textNode, mark);
+      });
+
+      activePassage.normalize();
+      hideHighlightPopup();
+    }
+
+    document.addEventListener("mouseup", function() {
+      setTimeout(updateHighlightPopup, 10);
+    });
+
+    document.addEventListener("keyup", function() {
+      setTimeout(updateHighlightPopup, 10);
+    });
+
+    document.addEventListener("mousedown", function(event) {
+      const popup = getHighlightPopup();
+      if (popup && !popup.contains(event.target)) {
+        hideHighlightPopup();
+      }
+    });
+
+    window.addEventListener("scroll", hideHighlightPopup, true);
+    window.addEventListener("resize", hideHighlightPopup);
+
+    document.addEventListener("input", updateProgress);
+    document.addEventListener("change", updateProgress);
+    fillSelects();
+    renderTimer();
+    updateProgress();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("../service-worker.js");
+      });
+    }
+  </script>
+</body>
+</html>

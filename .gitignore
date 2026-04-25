@@ -1,0 +1,16 @@
+# Build output
+dist/
+
+# Local OS/editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Optional local-only media or generated assets can be ignored here if needed.
+# assets/audio/*.mp3

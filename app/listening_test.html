@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0284c7" />
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="icon" href="../assets/icons/app-icon.svg" type="image/svg+xml" />
+  <title>IELTS Listening Practice - VOL 7 TEST 6</title>
+  <style>
+    :root {
+      --bg: #f5fbff;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --accent: #14b8a6;
+      --border: #dbeafe;
+      --soft-blue: #e0f2fe;
+      --soft-green: #ecfdf5;
+      --soft-red: #fef2f2;
+      --shadow: 0 12px 28px rgba(2, 132, 199, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0284c7, #14b8a6);
+      color: white;
+      padding: 22px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+
+    .header-inner {
+      max-width: 1150px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .audio-box {
+      width: 100%;
+      max-width: none;
+      margin: 14px 0 0;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 12px;
+      border-radius: 16px;
+    }
+
+    audio {
+      width: 100%;
+      display: block;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      max-width: none;
+      margin: 12px 0 0;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: #22c55e;
+      transition: width 0.25s;
+    }
+
+    .progress-text {
+      margin-top: 6px;
+      text-align: right;
+      color: rgba(255,255,255,0.9);
+      font-size: 13px;
+    }
+
+    .tabs {
+      max-width: 1150px;
+      margin: 20px auto 0;
+      padding: 0 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 800;
+      box-shadow: 0 3px 10px rgba(15,23,42,0.04);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 8px 18px rgba(2, 132, 199, 0.22);
+    }
+
+    main {
+      max-width: 1150px;
+      margin: 18px auto 40px;
+      padding: 0 20px;
+    }
+
+    .part {
+      display: none;
+    }
+
+    .part.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card::before {
+      content: "";
+      display: block;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .card-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: #fbfdff;
+    }
+
+    .card-header h2, .card-header h3 {
+      margin: 0;
+    }
+
+    .card-header small {
+      color: var(--muted);
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .instruction {
+      background: var(--soft-blue);
+      border-left: 4px solid var(--primary);
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin: 10px 0 18px;
+      color: var(--primary-dark);
+      font-size: 14px;
+    }
+
+    .q {
+      margin: 14px 0;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .q-number {
+      font-weight: 800;
+      color: var(--primary);
+      margin-right: 6px;
+    }
+
+    input[type="text"], select {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-size: 15px;
+      outline: none;
+      background: white;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(2,132,199,0.12);
+    }
+
+    .answer-slot {
+      min-width: 150px;
+      max-width: 220px;
+      margin: 0 4px;
+    }
+
+    .wide-input {
+      width: 100%;
+      max-width: 320px;
+      margin-top: 8px;
+    }
+
+    .table-like {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1.1fr 1.2fr;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .row:last-child {
+      border-bottom: none;
+    }
+
+    .cell {
+      padding: 13px 14px;
+      border-right: 1px solid var(--border);
+    }
+
+    .cell:last-child {
+      border-right: none;
+    }
+
+    .section-title {
+      background: #f0f9ff;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .option {
+      display: block;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #f8fbff;
+    }
+
+    .map-img {
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin: 16px 0;
+      background: white;
+      padding: 8px;
+    }
+
+    .matching-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(120px, 180px);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .notice {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
+    .bottom-panel {
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+      background: rgba(245,251,255,0.92);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      margin: 24px -20px 0;
+    }
+
+    .bottom-inner {
+      max-width: 1150px;
+      margin: auto;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .score {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 800;
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn.secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    @media (max-width: 700px) {
+      header {
+        position: static;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .cell {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .cell:last-child {
+        border-bottom: none;
+      }
+
+      .matching-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bottom-panel {
+        position: static;
+      }
+    }
+
+    @media print {
+      header, .tabs, .bottom-panel {
+        display: none;
+      }
+      .part {
+        display: block !important;
+        page-break-after: always;
+      }
+      .card {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div>
+        <h1>IELTS Listening Practice</h1>
+        <div class="subtitle">VOL 7 TEST 6</div>
+      </div>
+    </div>
+    <div class="audio-box">
+      <audio controls preload="metadata">
+        <source src="../assets/audio/vol7_test6_listening.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+      <div id="progressText" class="progress-text">0 / 40 answered</div>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showPart(1)">Part 1</button>
+    <button class="tab-btn" onclick="showPart(2)">Part 2</button>
+    <button class="tab-btn" onclick="showPart(3)">Part 3</button>
+    <button class="tab-btn" onclick="showPart(4)">Part 4</button>
+  </div>
+
+  <main>
+    <div class="notice">
+      This version is ready for student practice. The answer key has not been added yet, so the Check Answers button will only show completion status. Send the key file later and this HTML can be updated for auto-marking.
+    </div>
+
+    <section id="part1" class="part active">
+      <div class="card">
+        <div class="card-header">
+          <h2>Part 1</h2>
+          <small>Questions 1–10</small>
+        </div>
+        <div class="content">
+          <h3>The London Relocation Services</h3>
+          <div class="instruction">Complete the table below. Write ONE WORD AND/OR A NUMBER for each answer.</div>
+
+          <div class="table-like">
+            <div class="row section-title"><div class="cell">Information</div><div class="cell">Answer</div></div>
+            <div class="row"><div class="cell">Customer’s name</div><div class="cell">Anna Woods</div></div>
+            <div class="row section-title"><div class="cell">Customer’s personal details</div><div class="cell"></div></div>
+            <div class="row"><div class="cell">Customer address: 118 <span class="q-number">1</span> ____ Park, Ballysillan</div><div class="cell"><input data-q="1" class="wide-input" type="text"></div></div>
+            <div class="row"><div class="cell">Postcode</div><div class="cell">BT14 9BJ</div></div>
+            <div class="row"><div class="cell">Phone no: <span class="q-number">2</span> ____ (mobile)</div><div class="cell"><input data-q="2" class="wide-input" type="text"></div></div>
+            <div class="row section-title"><div class="cell">Other information</div><div class="cell"></div></div>
+            <div class="row"><div class="cell">Anna is hoping to find work as a <span class="q-number">3</span> ____</div><div class="cell"><input data-q="3" class="wide-input" type="text"></div></div>
+            <div class="row"><div class="cell">She needs to find a <span class="q-number">4</span> ____ school for her son.</div><div class="cell"><input data-q="4" class="wide-input" type="text"></div></div>
+            <div class="row section-title"><div class="cell">Requirements for the new property</div><div class="cell"></div></div>
+            <div class="row"><div class="cell">Preferred location: in the <span class="q-number">5</span> ____ of the city.</div><div class="cell"><input data-q="5" class="wide-input" type="text"></div></div>
+            <div class="row"><div class="cell">Her husband would like to be near a <span class="q-number">6</span> ____</div><div class="cell"><input data-q="6" class="wide-input" type="text"></div></div>
+            <div class="row"><div class="cell">Her son would prefer to be close to a <span class="q-number">7</span> ____</div><div class="cell"><input data-q="7" class="wide-input" type="text"></div></div>
+            <div class="row"><div class="cell">She would like to live in a <span class="q-number">8</span> ____</div><div class="cell"><input data-q="8" class="wide-input" type="text"></div></div>
+            <div class="row"><div class="cell">She would prefer <span class="q-number">9</span> ____ bedrooms.</div><div class="cell"><input data-q="9" class="wide-input" type="text"></div></div>
+            <div class="row"><div class="cell">A small <span class="q-number">10</span> ____ is also desirable.</div><div class="cell"><input data-q="10" class="wide-input" type="text"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="part2" class="part">
+      <div class="card">
+        <div class="card-header">
+          <h2>Part 2</h2>
+          <small>Questions 11–20</small>
+        </div>
+        <div class="content">
+          <h3>Starting work at Hollies supermarket</h3>
+
+          <h3>Questions 11–14</h3>
+          <div class="instruction">Choose the correct answer.</div>
+
+          <div class="q">
+            <div><span class="q-number">11</span>The supervisor starts her talk by explaining that employees have to</div>
+            <select data-q="11" class="wide-input">
+              <option value="">Choose</option>
+              <option value="A">A be aware of the importance of teamwork.</option>
+              <option value="B">B be flexible in terms of their availability.</option>
+              <option value="C">C be capable of lifting heavy loads.</option>
+            </select>
+          </div>
+
+          <div class="q">
+            <div><span class="q-number">12</span>The supervisor says that when the supermarket is very busy, employees must</div>
+            <select data-q="12" class="wide-input">
+              <option value="">Choose</option>
+              <option value="A">A decide for themselves what needs doing.</option>
+              <option value="B">B postpone their scheduled break.</option>
+              <option value="C">C report minor accidents quickly.</option>
+            </select>
+          </div>
+
+          <div class="q">
+            <div><span class="q-number">13</span>The supervisor explains that when employees have a positive attitude, it</div>
+            <select data-q="13" class="wide-input">
+              <option value="">Choose</option>
+              <option value="A">A helps everyone in the supermarket to relax.</option>
+              <option value="B">B encourages customers to spend more.</option>
+              <option value="C">C improves work effectiveness.</option>
+            </select>
+          </div>
+
+          <div class="q">
+            <div><span class="q-number">14</span>The supervisor says it is essential to stay calm when a customer</div>
+            <select data-q="14" class="wide-input">
+              <option value="">Choose</option>
+              <option value="A">A reports an employee to the manager.</option>
+              <option value="B">B delays other shoppers.</option>
+              <option value="C">C refuses to wait their turn.</option>
+            </select>
+          </div>
+
+          <h3>Questions 15–20</h3>
+          <div class="instruction">Label the plan below. Choose the correct letter, A–J, next to questions 15–20.</div>
+          <img class="map-img" src="../assets/images/part2_plan.png" alt="Plan for questions 15 to 20">
+
+          <div class="q matching-grid"><div><span class="q-number">15</span>Staff entrance</div><select data-q="15"></select></div>
+          <div class="q matching-grid"><div><span class="q-number">16</span>Manager's office</div><select data-q="16"></select></div>
+          <div class="q matching-grid"><div><span class="q-number">17</span>Storage and unpacking</div><select data-q="17"></select></div>
+          <div class="q matching-grid"><div><span class="q-number">18</span>Kitchen</div><select data-q="18"></select></div>
+          <div class="q matching-grid"><div><span class="q-number">19</span>Cleaning equipment</div><select data-q="19"></select></div>
+          <div class="q matching-grid"><div><span class="q-number">20</span>Staff relaxation area</div><select data-q="20"></select></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="part3" class="part">
+      <div class="card">
+        <div class="card-header">
+          <h2>Part 3</h2>
+          <small>Questions 21–30</small>
+        </div>
+        <div class="content">
+          <h3>Questions 21–26</h3>
+          <div class="instruction">What reason do teachers give for using each of the following picture books with children? Choose SIX correct answers, A–I.</div>
+
+          <div class="table-like">
+            <div class="row section-title"><div class="cell">Picture books</div><div class="cell">Answer</div></div>
+            <div class="row"><div class="cell"><span class="q-number">21</span>Spy Friends</div><div class="cell"><select data-q="21"></select></div></div>
+            <div class="row"><div class="cell"><span class="q-number">22</span>Goodnight Little Rabbit</div><div class="cell"><select data-q="22"></select></div></div>
+            <div class="row"><div class="cell"><span class="q-number">23</span>The Boat Party</div><div class="cell"><select data-q="23"></select></div></div>
+            <div class="row"><div class="cell"><span class="q-number">24</span>Puppy and Friends</div><div class="cell"><select data-q="24"></select></div></div>
+            <div class="row"><div class="cell"><span class="q-number">25</span>Hats and Socks</div><div class="cell"><select data-q="25"></select></div></div>
+            <div class="row"><div class="cell"><span class="q-number">26</span>A Family Adventure</div><div class="cell"><select data-q="26"></select></div></div>
+          </div>
+
+          <div class="content" style="padding-left:0; padding-right:0;">
+            <h3>Reasons</h3>
+            <p>A The pictures show changing times of day.</p>
+            <p>B The words are fun to say out loud.</p>
+            <p>C It has an uncommon plot structure.</p>
+            <p>D The text can easily be turned into song.</p>
+            <p>E The pictures were done by a famous illustrator.</p>
+            <p>F There is a surprise at the end of the story.</p>
+            <p>G The pictures are simple line drawings.</p>
+            <p>H It was published very recently.</p>
+            <p>I It features well-known characters.</p>
+          </div>
+
+          <h3>Questions 27–28</h3>
+          <div class="instruction">Choose TWO correct answers. Which TWO points from Smith's article about picture books did both speakers find surprising?</div>
+          <div class="q"><span class="q-number">27</span><select data-q="27"></select></div>
+          <div class="q"><span class="q-number">28</span><select data-q="28"></select></div>
+
+          <h3>Questions 29–30</h3>
+          <div class="instruction">Choose TWO correct answers. Which TWO aspects of picture books do the speakers agree to talk about in their presentation?</div>
+          <div class="q"><span class="q-number">29</span><select data-q="29"></select></div>
+          <div class="q"><span class="q-number">30</span><select data-q="30"></select></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="part4" class="part">
+      <div class="card">
+        <div class="card-header">
+          <h2>Part 4</h2>
+          <small>Questions 31–40</small>
+        </div>
+        <div class="content">
+          <h3>Geography – 331 Field Trip</h3>
+          <div class="instruction">Complete the notes below. Write ONE WORD ONLY for each answer.</div>
+
+          <div class="q"><strong>The James Bay Road</strong><br>At the starting point of the road, everyone must stop for <span class="q-number">31</span><input data-q="31" class="answer-slot" type="text">.</div>
+          <div class="q">For safety reasons, there are <span class="q-number">32</span><input data-q="32" class="answer-slot" type="text"> on the highway.</div>
+
+          <div class="q"><strong>Radisson Research Centre</strong><br>The Centre works with other institutes to research the region's <span class="q-number">33</span><input data-q="33" class="answer-slot" type="text">.</div>
+          <div class="q">Lectures will discuss the effect of <span class="q-number">34</span><input data-q="34" class="answer-slot" type="text"> on the land.</div>
+          <div class="q">Outpost stations gather and publish research related to variations in the <span class="q-number">35</span><input data-q="35" class="answer-slot" type="text">.</div>
+
+          <div class="q"><strong>The Trans-Taiga Road</strong><br>Breakdowns are serious as car <span class="q-number">36</span><input data-q="36" class="answer-slot" type="text"> are expensive.</div>
+
+          <div class="q"><strong>The Taiga</strong><br>There are not many types of <span class="q-number">37</span><input data-q="37" class="answer-slot" type="text">, but a good range of wildlife.</div>
+          <div class="q">The area known as Muskeg is dangerous as it has hidden <span class="q-number">38</span><input data-q="38" class="answer-slot" type="text">.</div>
+          <div class="q">Photographs of birds should be taken for future <span class="q-number">39</span><input data-q="39" class="answer-slot" type="text">.</div>
+          <div class="q">Water samples will be checked for <span class="q-number">40</span><input data-q="40" class="answer-slot" type="text">.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="bottom-panel">
+      <div class="bottom-inner">
+        <div class="score" id="scoreText">Completion: 0 / 40</div>
+        <div class="actions">
+          <button class="btn" onclick="checkCompletion()">Check Completion</button>
+          <button class="btn secondary" onclick="clearAnswers()">Clear</button>
+          <button class="btn secondary" onclick="window.print()">Print</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const totalQuestions = 40;
+
+    function fillLetterSelect(selector, letters, withText = null) {
+      document.querySelectorAll(selector).forEach(sel => {
+        sel.innerHTML = '<option value="">Choose</option>' + letters.map(letter => {
+          const label = withText && withText[letter] ? `${letter} ${withText[letter]}` : letter;
+          return `<option value="${letter}">${label}</option>`;
+        }).join("");
+      });
+    }
+
+    function initializeSelects() {
+      fillLetterSelect('[data-q="15"], [data-q="16"], [data-q="17"], [data-q="18"], [data-q="19"], [data-q="20"]', ["A","B","C","D","E","F","G","H","I","J"]);
+
+      const reasonText = {
+        A: "The pictures show changing times of day.",
+        B: "The words are fun to say out loud.",
+        C: "It has an uncommon plot structure.",
+        D: "The text can easily be turned into song.",
+        E: "The pictures were done by a famous illustrator.",
+        F: "There is a surprise at the end of the story.",
+        G: "The pictures are simple line drawings.",
+        H: "It was published very recently.",
+        I: "It features well-known characters."
+      };
+      fillLetterSelect('[data-q="21"], [data-q="22"], [data-q="23"], [data-q="24"], [data-q="25"], [data-q="26"]', ["A","B","C","D","E","F","G","H","I"], reasonText);
+
+      const q2728 = {
+        A: "their standard length / how recent the genre is",
+        B: "the argument that they are not literature",
+        C: "the lack of research about this age group",
+        D: "the popularity of books from overseas",
+        E: "the variety of versions"
+      };
+      fillLetterSelect('[data-q="27"], [data-q="28"]', ["A","B","C","D","E"], q2728);
+
+      const q2930 = {
+        A: "the material they are made from",
+        B: "common characters in them",
+        C: "the variety of roles in them",
+        D: "cultural elements in them",
+        E: "the future of the genre"
+      };
+      fillLetterSelect('[data-q="29"], [data-q="30"]', ["A","B","C","D","E"], q2930);
+    }
+
+    function getInput(qNum) {
+      return document.querySelector(`[data-q="${qNum}"]`);
+    }
+
+    function countAnswered() {
+      let answered = 0;
+      for (let i = 1; i <= totalQuestions; i++) {
+        const input = getInput(i);
+        if (input && input.value.trim() !== "") answered++;
+      }
+      return answered;
+    }
+
+    function updateProgress() {
+      const answered = countAnswered();
+      document.getElementById("progressFill").style.width = `${answered / totalQuestions * 100}%`;
+      document.getElementById("progressText").textContent = `${answered} / ${totalQuestions} answered`;
+      document.getElementById("scoreText").textContent = `Completion: ${answered} / ${totalQuestions}`;
+    }
+
+    function checkCompletion() {
+      const answered = countAnswered();
+      alert(`You have answered ${answered} out of ${totalQuestions} questions.\n\nAnswer key is not included in this version yet.`);
+      updateProgress();
+    }
+
+    function clearAnswers() {
+      for (let i = 1; i <= totalQuestions; i++) {
+        const input = getInput(i);
+        if (input) input.value = "";
+      }
+      updateProgress();
+    }
+
+    function showPart(num) {
+      document.querySelectorAll(".part").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(`part${num}`).classList.add("active");
+
+      document.querySelectorAll(".tab-btn").forEach((btn, idx) => {
+        btn.classList.toggle("active", idx === num - 1);
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.addEventListener("input", updateProgress);
+    document.addEventListener("change", updateProgress);
+    initializeSelects();
+    updateProgress();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("../service-worker.js");
+      });
+    }
+  </script>
+</body>
+</html>

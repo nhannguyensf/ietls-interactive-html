@@ -1,0 +1,30 @@
+{
+  "name": "IELTS Practice",
+  "short_name": "IELTS",
+  "description": "IELTS listening and reading practice tests.",
+  "start_url": "./app/listening_test.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5fbff",
+  "theme_color": "#0284c7",
+  "icons": [
+    {
+      "src": "./assets/icons/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Listening Test",
+      "short_name": "Listening",
+      "url": "./app/listening_test.html"
+    },
+    {
+      "name": "Reading Test",
+      "short_name": "Reading",
+      "url": "./app/reading_test.html"
+    }
+  ]
+}
