@@ -775,6 +775,7 @@
   <footer class="site-footer" data-brand-footer></footer>
 
   <script src="../scripts/brand.js"></script>
+  <script src="../scripts/highlight-tools.js"></script>
 
   <script>
     const answers = {
@@ -923,6 +924,7 @@
       document.querySelectorAll(".tab-btn").forEach((btn, idx) => {
         btn.classList.toggle("active", idx === num - 1);
       });
+      hideHighlightPopup();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -969,231 +971,25 @@
 
 
 
-    let savedHighlightRange = null;
-
-    function getActivePassageBody() {
-      return document.querySelector(".passage-section.active .passage-body");
-    }
-
-    function getHighlightPopup() {
-      return document.getElementById("highlightPopup");
-    }
+    const highlightTools = HighlightTools.create({
+      activeRootSelector: ".passage-section.active .passage-body",
+      popupId: "highlightPopup",
+      selectTextMessage: "Please select text inside the active reading passage first.",
+      selectHighlightMessage: "Please select highlighted text inside the active reading passage first.",
+      emptyHighlightMessage: "Please select highlighted text to clear."
+    });
 
     function hideHighlightPopup() {
-      const popup = getHighlightPopup();
-      if (popup) popup.classList.remove("visible");
-    }
-
-    function updateHighlightPopup() {
-      const selection = window.getSelection();
-      const popup = getHighlightPopup();
-      const activePassage = getActivePassageBody();
-
-      if (!selection || !popup || !activePassage || selection.rangeCount === 0 || selection.toString().trim() === "") {
-        hideHighlightPopup();
-        return;
-      }
-
-      const range = selection.getRangeAt(0);
-
-      if (!activePassage.contains(range.commonAncestorContainer)) {
-        hideHighlightPopup();
-        return;
-      }
-
-      savedHighlightRange = range.cloneRange();
-
-      const rect = range.getBoundingClientRect();
-      const popupWidth = 190;
-      let left = rect.left + rect.width / 2 - popupWidth / 2;
-      let top = rect.top - 52;
-
-      if (left < 10) left = 10;
-      if (left + popupWidth > window.innerWidth - 10) left = window.innerWidth - popupWidth - 10;
-      if (top < 10) top = rect.bottom + 12;
-
-      popup.style.left = left + "px";
-      popup.style.top = top + "px";
-      popup.classList.add("visible");
-    }
-
-    function rangeIntersectsNode(range, node) {
-      if (typeof range.intersectsNode === "function") {
-        return range.intersectsNode(node);
-      }
-
-      const nodeRange = document.createRange();
-      nodeRange.selectNodeContents(node);
-      return range.compareBoundaryPoints(Range.END_TO_START, nodeRange) > 0 &&
-        range.compareBoundaryPoints(Range.START_TO_END, nodeRange) < 0;
-    }
-
-    function applyHighlightToRange(range, root, color) {
-      const highlights = [];
-      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-        acceptNode(node) {
-          const parent = node.parentElement;
-          if (!node.nodeValue.trim() || !parent) return NodeFilter.FILTER_REJECT;
-          if (parent.closest("input, textarea, select, option, button, audio, iframe")) {
-            return NodeFilter.FILTER_REJECT;
-          }
-          return rangeIntersectsNode(range, node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-        }
-      });
-
-      while (walker.nextNode()) {
-        const node = walker.currentNode;
-        let start = node === range.startContainer ? range.startOffset : 0;
-        let end = node === range.endContainer ? range.endOffset : node.nodeValue.length;
-
-        if (start < 0) start = 0;
-        if (end > node.nodeValue.length) end = node.nodeValue.length;
-        if (start < end) {
-          highlights.push({ node, start, end });
-        }
-      }
-
-      highlights.reverse().forEach(({ node, start, end }) => {
-        const after = end < node.nodeValue.length ? node.splitText(end) : node.nextSibling;
-        const selected = start > 0 ? node.splitText(start) : node;
-        const mark = document.createElement("mark");
-        mark.className = "user-highlight-" + color;
-        selected.parentNode.insertBefore(mark, after);
-        mark.appendChild(selected);
-      });
-    }
-
-    function getCurrentHighlightRange() {
-      if (savedHighlightRange) return savedHighlightRange;
-
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") {
-        return selection.getRangeAt(0);
-      }
-
-      return null;
-    }
-
-    function clearSelectedHighlights(range, root) {
-      const highlights = [];
-      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-        acceptNode(node) {
-          const mark = node.parentElement && node.parentElement.closest("mark[class^='user-highlight-']");
-          if (!node.nodeValue || !mark) return NodeFilter.FILTER_REJECT;
-          return rangeIntersectsNode(range, node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-        }
-      });
-
-      while (walker.nextNode()) {
-        const node = walker.currentNode;
-        let start = node === range.startContainer ? range.startOffset : 0;
-        let end = node === range.endContainer ? range.endOffset : node.nodeValue.length;
-
-        if (start < 0) start = 0;
-        if (end > node.nodeValue.length) end = node.nodeValue.length;
-        if (start < end) {
-          highlights.push({ node, start, end });
-        }
-      }
-
-      highlights.reverse().forEach(({ node, start, end }) => {
-        const mark = node.parentElement.closest("mark[class^='user-highlight-']");
-        if (!mark || mark.childNodes.length !== 1 || mark.firstChild !== node) return;
-
-        const text = node.nodeValue;
-        const beforeText = text.slice(0, start);
-        const selectedText = text.slice(start, end);
-        const afterText = text.slice(end);
-        const parent = mark.parentNode;
-
-        if (beforeText) {
-          const beforeMark = mark.cloneNode(false);
-          beforeMark.textContent = beforeText;
-          parent.insertBefore(beforeMark, mark);
-        }
-
-        if (selectedText) {
-          parent.insertBefore(document.createTextNode(selectedText), mark);
-        }
-
-        if (afterText) {
-          const afterMark = mark.cloneNode(false);
-          afterMark.textContent = afterText;
-          parent.insertBefore(afterMark, mark);
-        }
-
-        parent.removeChild(mark);
-      });
-
-      return highlights.length;
+      highlightTools.hidePopup();
     }
 
     function highlightSelection(color) {
-      const activePassage = getActivePassageBody();
-      let range = savedHighlightRange;
-
-      if (!range) {
-        const selection = window.getSelection();
-        if (selection && selection.rangeCount > 0) {
-          range = selection.getRangeAt(0);
-        }
-      }
-
-      if (!range || !activePassage || !activePassage.contains(range.commonAncestorContainer)) {
-        alert("Please select text inside the active reading passage first.");
-        hideHighlightPopup();
-        return;
-      }
-
-      applyHighlightToRange(range, activePassage, color);
-
-      const selection = window.getSelection();
-      if (selection) selection.removeAllRanges();
-
-      savedHighlightRange = null;
-      hideHighlightPopup();
+      highlightTools.highlightSelection(color);
     }
 
     function clearHighlightsInActivePassage() {
-      const activePassage = getActivePassageBody();
-      if (!activePassage) return;
-
-      const range = getCurrentHighlightRange();
-      if (!range || !activePassage.contains(range.commonAncestorContainer)) {
-        alert("Please select highlighted text inside the active reading passage first.");
-        hideHighlightPopup();
-        return;
-      }
-
-      const cleared = clearSelectedHighlights(range, activePassage);
-      if (!cleared) {
-        alert("Please select highlighted text to clear.");
-      }
-
-      activePassage.normalize();
-      const selection = window.getSelection();
-      if (selection) selection.removeAllRanges();
-      savedHighlightRange = null;
-      hideHighlightPopup();
+      highlightTools.clearHighlights();
     }
-
-    document.addEventListener("mouseup", function() {
-      setTimeout(updateHighlightPopup, 10);
-    });
-
-    document.addEventListener("keyup", function() {
-      setTimeout(updateHighlightPopup, 10);
-    });
-
-    document.addEventListener("mousedown", function(event) {
-      const popup = getHighlightPopup();
-      if (popup && !popup.contains(event.target)) {
-        hideHighlightPopup();
-      }
-    });
-
-    window.addEventListener("scroll", hideHighlightPopup, true);
-    window.addEventListener("resize", hideHighlightPopup);
 
     document.addEventListener("input", updateProgress);
     document.addEventListener("change", updateProgress);
