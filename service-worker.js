@@ -1,4 +1,4 @@
-const CACHE_NAME = "ielts-practice-v3";
+const CACHE_NAME = "ielts-practice-v6";
 const APP_SHELL = [
   "./",
   "./index.html",

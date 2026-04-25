@@ -534,7 +534,7 @@
     <button class="highlight-dot yellow" title="Yellow" onclick="highlightSelection('yellow')"></button>
     <button class="highlight-dot green" title="Green" onclick="highlightSelection('green')"></button>
     <button class="highlight-dot pink" title="Pink" onclick="highlightSelection('pink')"></button>
-    <button class="highlight-clear-small" title="Clear all highlights in this passage" onclick="clearHighlightsInActivePassage()">Clear</button>
+    <button class="highlight-clear-small" title="Clear selected highlight" onclick="clearHighlightsInActivePassage()">Clear</button>
   </div>
 
   <main>
@@ -1010,6 +1010,117 @@
       popup.classList.add("visible");
     }
 
+    function rangeIntersectsNode(range, node) {
+      if (typeof range.intersectsNode === "function") {
+        return range.intersectsNode(node);
+      }
+
+      const nodeRange = document.createRange();
+      nodeRange.selectNodeContents(node);
+      return range.compareBoundaryPoints(Range.END_TO_START, nodeRange) > 0 &&
+        range.compareBoundaryPoints(Range.START_TO_END, nodeRange) < 0;
+    }
+
+    function applyHighlightToRange(range, root, color) {
+      const highlights = [];
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!node.nodeValue.trim() || !parent) return NodeFilter.FILTER_REJECT;
+          if (parent.closest("input, textarea, select, option, button, audio, iframe")) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return rangeIntersectsNode(range, node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        let start = node === range.startContainer ? range.startOffset : 0;
+        let end = node === range.endContainer ? range.endOffset : node.nodeValue.length;
+
+        if (start < 0) start = 0;
+        if (end > node.nodeValue.length) end = node.nodeValue.length;
+        if (start < end) {
+          highlights.push({ node, start, end });
+        }
+      }
+
+      highlights.reverse().forEach(({ node, start, end }) => {
+        const after = end < node.nodeValue.length ? node.splitText(end) : node.nextSibling;
+        const selected = start > 0 ? node.splitText(start) : node;
+        const mark = document.createElement("mark");
+        mark.className = "user-highlight-" + color;
+        selected.parentNode.insertBefore(mark, after);
+        mark.appendChild(selected);
+      });
+    }
+
+    function getCurrentHighlightRange() {
+      if (savedHighlightRange) return savedHighlightRange;
+
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") {
+        return selection.getRangeAt(0);
+      }
+
+      return null;
+    }
+
+    function clearSelectedHighlights(range, root) {
+      const highlights = [];
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const mark = node.parentElement && node.parentElement.closest("mark[class^='user-highlight-']");
+          if (!node.nodeValue || !mark) return NodeFilter.FILTER_REJECT;
+          return rangeIntersectsNode(range, node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        let start = node === range.startContainer ? range.startOffset : 0;
+        let end = node === range.endContainer ? range.endOffset : node.nodeValue.length;
+
+        if (start < 0) start = 0;
+        if (end > node.nodeValue.length) end = node.nodeValue.length;
+        if (start < end) {
+          highlights.push({ node, start, end });
+        }
+      }
+
+      highlights.reverse().forEach(({ node, start, end }) => {
+        const mark = node.parentElement.closest("mark[class^='user-highlight-']");
+        if (!mark || mark.childNodes.length !== 1 || mark.firstChild !== node) return;
+
+        const text = node.nodeValue;
+        const beforeText = text.slice(0, start);
+        const selectedText = text.slice(start, end);
+        const afterText = text.slice(end);
+        const parent = mark.parentNode;
+
+        if (beforeText) {
+          const beforeMark = mark.cloneNode(false);
+          beforeMark.textContent = beforeText;
+          parent.insertBefore(beforeMark, mark);
+        }
+
+        if (selectedText) {
+          parent.insertBefore(document.createTextNode(selectedText), mark);
+        }
+
+        if (afterText) {
+          const afterMark = mark.cloneNode(false);
+          afterMark.textContent = afterText;
+          parent.insertBefore(afterMark, mark);
+        }
+
+        parent.removeChild(mark);
+      });
+
+      return highlights.length;
+    }
+
     function highlightSelection(color) {
       const activePassage = getActivePassageBody();
       let range = savedHighlightRange;
@@ -1027,16 +1138,7 @@
         return;
       }
 
-      const mark = document.createElement("mark");
-      mark.className = "user-highlight-" + color;
-
-      try {
-        range.surroundContents(mark);
-      } catch (error) {
-        const selectedText = range.extractContents();
-        mark.appendChild(selectedText);
-        range.insertNode(mark);
-      }
+      applyHighlightToRange(range, activePassage, color);
 
       const selection = window.getSelection();
       if (selection) selection.removeAllRanges();
@@ -1049,12 +1151,22 @@
       const activePassage = getActivePassageBody();
       if (!activePassage) return;
 
-      activePassage.querySelectorAll("mark[class^='user-highlight-']").forEach(mark => {
-        const textNode = document.createTextNode(mark.textContent);
-        mark.parentNode.replaceChild(textNode, mark);
-      });
+      const range = getCurrentHighlightRange();
+      if (!range || !activePassage.contains(range.commonAncestorContainer)) {
+        alert("Please select highlighted text inside the active reading passage first.");
+        hideHighlightPopup();
+        return;
+      }
+
+      const cleared = clearSelectedHighlights(range, activePassage);
+      if (!cleared) {
+        alert("Please select highlighted text to clear.");
+      }
 
       activePassage.normalize();
+      const selection = window.getSelection();
+      if (selection) selection.removeAllRanges();
+      savedHighlightRange = null;
       hideHighlightPopup();
     }
 
